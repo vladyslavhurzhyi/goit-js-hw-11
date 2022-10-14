@@ -9,60 +9,90 @@ import { slowScroll } from './js/slowScroll';
 
 const pixabayAPI = new PixabayAPI();
 
-const handleSubmit = async (event) => {
-    event.preventDefault();
+// _____________observer_________
 
-    clearPage();
-    const {
-        elements: { searchQuery },
-    } = event.currentTarget;
+const options = {
+  root: null,
+  rootMargin: '100px',
+  threshold: 1,
+};
 
-    const searchValue = searchQuery.value.trim().toLowerCase();
-
-    if (!searchValue) {
-        Notiflix.Notify.failure('Введите текст');
-        return;
+const callback = async function (entries, observer) {
+  entries.forEach(async entry => {
+    if (entry.isIntersecting && entry.intersectionRect.bottom > 550) {
+      try {
+        await loadMorePhoto();
+      } catch (error) {
+        Notiflix.Notify.failure(error.message, 'Oops...something wrong');
+        clearPage();
+      }
     }
+  });
+};
 
-    pixabayAPI.query = searchValue;
+const io = new IntersectionObserver(callback, options);
+
+const handleSubmit = async event => {
+  event.preventDefault();
+
+  clearPage();
+  const {
+    elements: { searchQuery },
+  } = event.currentTarget;
+
+  const searchValue = searchQuery.value.trim().toLowerCase();
+
+  if (!searchValue) {
+    Notiflix.Notify.failure('Введите текст');
+    return;
+  }
+
+  pixabayAPI.query = searchValue;
+
+  try {
     const data = await pixabayAPI.getPhotos();
 
     if (data.totalHits === 0) {
-        Notiflix.Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-        );
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
     } else {
-        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images..`);
+      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images..`);
     }
     refs.form.reset();
 
     const markup = createMarkup(data);
     addMarkup(markup);
+    const target = document.querySelector('.photo-card:last-child');
+    io.observe(target);
+  } catch (error) {
+    Notiflix.Notify.failure(error.message, 'Oops...something wrong');
+    clearPage();
+  }
 };
-
-// ______________________
 
 refs.form.addEventListener('submit', handleSubmit);
 
-// ________simple____
+// ________SimpleLightbox____
 
 export let lightbox = new SimpleLightbox('.photo-card a');
 
 // ________load more____
 
-refs.loadMore.addEventListener('click', loadMorePhoto);
-
-async function loadMorePhoto() {
-    pixabayAPI.incrementPage();
-    const data = await pixabayAPI.getPhotos();
-    const markup = createMarkup(data);
-    addMarkup(markup);
-    slowScroll();
+export async function loadMorePhoto() {
+  pixabayAPI.incrementPage();
+  const data = await pixabayAPI.getPhotos();
+  const markup = createMarkup(data);
+  addMarkup(markup);
+  slowScroll();
+  const target = document.querySelector('.photo-card:last-child');
+  io.observe(target);
 }
 
 // ________clear page____
 
 function clearPage() {
-    pixabayAPI.decrementPage();
-    refs.gallery.innerHTML = '';
+  pixabayAPI.decrementPage();
+  refs.gallery.innerHTML = '';
 }
