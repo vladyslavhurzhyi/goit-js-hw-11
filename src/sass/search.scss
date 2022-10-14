@@ -1,0 +1,30 @@
+.search {
+  background: rgb(17, 99, 214);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  height: 40px;
+  border: none;
+  width: 400px;
+  padding-left: 10px;
+}
+
+.search-form {
+  display: flex;
+  position: relative;
+}
+
+.btn {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  right: 0;
+  border: none;
+  background-image: url(/svg/icon_search.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}

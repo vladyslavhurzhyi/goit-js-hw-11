@@ -1,0 +1,38 @@
+img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.gallery {
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+.photo-card {
+  width: calc(100% / 4 - 30px);
+  height: calc(100% / 4);
+  margin: 10px;
+  border: 0.1px solid black;
+}
+
+.info-item {
+  margin: auto;
+  font-size: 12px;
+}
+
+.info {
+  display: flex;
+  height: 50px;
+}
+
+.load-more {
+  margin: 0 auto;
+  display: block;
+  width: 150px;
+  height: 50px;
+  background-color: rgb(39, 140, 157);
+  border: none;
+  margin-bottom: 50px;
+}
