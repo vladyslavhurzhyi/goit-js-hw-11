@@ -6,7 +6,6 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import { createMarkup } from './js/createMarkup';
 import { addMarkup } from './js/createMarkup';
 import { slowScroll } from './js/slowScroll';
-import { totalPage } from './js/PixabayAPI';
 
 const pixabayAPI = new PixabayAPI();
 
