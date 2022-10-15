@@ -6,6 +6,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import { createMarkup } from './js/createMarkup';
 import { addMarkup } from './js/createMarkup';
 import { slowScroll } from './js/slowScroll';
+import { totalPage } from './js/PixabayAPI';
 
 const pixabayAPI = new PixabayAPI();
 
@@ -88,6 +89,14 @@ export async function loadMorePhoto() {
   slowScroll();
   const target = document.querySelector('.photo-card:last-child');
   io.observe(target);
+
+  console.log(pixabayAPI.page);
+  console.log(totalPage);
+
+  //   if (pixabayAPI.page > totalPage) {
+  //     io.unobserve(target);
+  //     Notiflix.Notify.failure('ЗАКОНЧИЛИСЬ ФОТО');
+  //   }
 }
 
 // ________clear page____

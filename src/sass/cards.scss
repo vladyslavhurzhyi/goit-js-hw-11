@@ -1,6 +1,7 @@
 img {
+  display: block;
   max-width: 100%;
-  height: 200px;
+  height: 220px;
   object-fit: cover;
 }
 .gallery {
@@ -11,8 +12,8 @@ img {
 }
 
 .photo-card {
-  width: calc(100% / 4 - 30px);
-  height: calc(100% / 4);
+  width: calc((100% / 4) - 30px);
+  height: 100%;
   margin: 10px;
   border: 0.1px solid black;
 }
