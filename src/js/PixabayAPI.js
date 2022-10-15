@@ -15,6 +15,7 @@ export class PixabayAPI {
   #per_page = 40;
   #query = '';
   #totalHits = 0;
+  #totalPages = 0;
 
   async getPhotos() {
     const urlAXIOS = `?${key}&q=${this.#query}&${searchParams}&page=${
@@ -54,5 +55,13 @@ export class PixabayAPI {
 
   get totalHits() {
     return this.#totalHits;
+  }
+
+  calculateTotalpages() {
+    this.#totalPages = Math.ceil(this.#totalHits / this.#per_page);
+  }
+
+  get totalPages() {
+    return this.#totalPages;
   }
 }

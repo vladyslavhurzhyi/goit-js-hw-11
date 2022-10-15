@@ -20,6 +20,8 @@ const options = {
 const callback = async function (entries, observer) {
   entries.forEach(async entry => {
     if (entry.isIntersecting && entry.intersectionRect.bottom > 550) {
+      pixabayAPI.incrementPage();
+      io.unobserve(entry.target);
       try {
         await loadMorePhoto();
       } catch (error) {
@@ -52,6 +54,10 @@ const handleSubmit = async event => {
   try {
     const data = await pixabayAPI.getPhotos();
 
+    pixabayAPI.totalHits = data.totalHits;
+
+    pixabayAPI.calculateTotalpages();
+
     if (data.totalHits === 0) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
@@ -66,6 +72,9 @@ const handleSubmit = async event => {
     addMarkup(markup);
     const target = document.querySelector('.photo-card:last-child');
     io.observe(target);
+    if (pixabayAPI.page === pixabayAPI.totalPages) {
+      io.unobserve(target);
+    }
   } catch (error) {
     Notiflix.Notify.failure(error.message, 'Oops...something wrong');
     clearPage();
@@ -81,7 +90,6 @@ export let lightbox = new SimpleLightbox('.photo-card a');
 // ________load more____
 
 export async function loadMorePhoto() {
-  pixabayAPI.incrementPage();
   const data = await pixabayAPI.getPhotos();
   const markup = createMarkup(data);
   addMarkup(markup);
@@ -89,10 +97,10 @@ export async function loadMorePhoto() {
   const target = document.querySelector('.photo-card:last-child');
   io.observe(target);
 
-  //   if (pixabayAPI.page > totalPage) {
-  //     io.unobserve(target);
-  //     Notiflix.Notify.failure('ЗАКОНЧИЛИСЬ ФОТО');
-  //   }
+  if (pixabayAPI.page === pixabayAPI.totalPages) {
+    io.unobserve(target);
+    Notiflix.Notify.success('Вы посмотрели все картинки');
+  }
 }
 
 // ________clear page____
