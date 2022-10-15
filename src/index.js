@@ -89,9 +89,6 @@ export async function loadMorePhoto() {
   const target = document.querySelector('.photo-card:last-child');
   io.observe(target);
 
-  console.log(pixabayAPI.page);
-  console.log(totalPage);
-
   //   if (pixabayAPI.page > totalPage) {
   //     io.unobserve(target);
   //     Notiflix.Notify.failure('ЗАКОНЧИЛИСЬ ФОТО');
